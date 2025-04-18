@@ -1,16 +1,15 @@
 import asyncio
-from aiogram import Bot, Dispatcher, types
-from aiogram.filters.command import Command
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram import Bot, Dispatcher, F
+from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.filters import Command
 from config import BOT_TOKEN, ADMIN_ID
 
-# Инициализация бота и диспетчера
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
 
-# Создание клавиатуры главного меню
+# Главное меню
 def get_main_menu():
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+    return InlineKeyboardMarkup(inline_keyboard=[
         [
             InlineKeyboardButton(text="🃏 Герои", callback_data="heroes"),
             InlineKeyboardButton(text="🧠 Тир-лист", callback_data="tier_list")
@@ -28,20 +27,19 @@ def get_main_menu():
             InlineKeyboardButton(text="🛍 Магазин", callback_data="shop")
         ]
     ])
-    return keyboard
 
-# Обработчик команды /start
+# Команда /start
 @dp.message(Command("start"))
-async def cmd_start(message: types.Message):
+async def start_handler(message: Message):
     await message.answer(
         "Добро пожаловать в ML Helper AI! 🎮\n\n"
         "Выберите раздел в меню ниже:",
         reply_markup=get_main_menu()
     )
 
-# Обработчик команды /admin
+# Команда /admin
 @dp.message(Command("admin"))
-async def cmd_admin(message: types.Message):
+async def admin_handler(message: Message):
     if message.from_user.id == ADMIN_ID:
         await message.answer(
             "Панель администратора:\n\n"
@@ -56,9 +54,17 @@ async def cmd_admin(message: types.Message):
     else:
         await message.answer("У вас нет доступа к этой команде.")
 
-# Запуск бота
+# Хендлер для всех callback-кнопок
+@dp.callback_query(F.data.in_([
+    "heroes", "tier_list", "dictionary", "legends", 
+    "profile", "daily_tip", "quiz", "shop"
+]))
+async def handle_callbacks(callback: CallbackQuery):
+    await callback.answer(f"Вы выбрали: {callback.data}", show_alert=True)
+
+# Запуск
 async def main():
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
-    asyncio.run(main()) 
+    asyncio.run(main())
