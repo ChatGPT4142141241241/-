@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 # Загрузка переменных окружения из .env файла
 load_dotenv()
 
-# Токен бота
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = "7822505947:AAF02J4Zq-EcylSvn24Nw9txsm-l4Z8e0KM"
+ADMIN_ID =  6180147473  # сюда вставь свой Telegram user_id
 
 # Настройки базы данных
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///ml_helper.db")
