@@ -99,7 +99,7 @@ def run_webhook():
     time.sleep(1)
     import requests
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/setWebhook"
-    webhook_url = f"https://ml-helper-bot.onrender.com/{BOT_TOKEN}"
+    webhook_url = f"https://ml-helper.onrender.com/7822505947:AAF02J4Zq-EcylSvn24Nw9txsm-l4Z8e0KM"
     requests.get(url, params={'url': webhook_url})
 
 threading.Thread(target=run_webhook).start()
